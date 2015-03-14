@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+
+<plist version="1.0">
+   <dict>
+      <key>Identifier</key>
+      <string>org.mpush.template.project.mRocker-Push</string>
+      <key>Name</key>
+      <string>mPush Dependency</string>
+      <key>Ancestors</key>
+      <array />
+      <key>Description</key>
+      <string />
+      <key>Kind</key>
+      <string>Xcode.Xcode3.ProjectTemplateUnitKind</string>
+      
+      
+      <key>Info.plist:MPushAPPID</key>
+      <string>&lt;key&gt;eeeeeeeeeeee&lt;/key&gt;
+          &lt;string&gt;sssssssssssss&lt;/string&gt; </string>
+      
+      <key>Options</key>
+      <array>
+         <dict>
+            <key>Default</key>
+            <string>false</string>
+            <key>Description</key>
+            <string>Indicates whether the application should include mPush Support</string>
+            <key>Identifier</key>
+            <string>otp</string>
+            <key>Name</key>
+            <string>Enable 'Push' support</string>
+            <key>SortOrder</key>
+            <integer>2</integer>
+            <key>Type</key>
+            <string>checkbox</string>
+            <key>Units</key>
+            <dict>
+               <key>true</key>
+               <dict>
+                  <key>Definitions</key>
+                  <dict>
+                     <key>../Podfile:push</key>
+                     <string>pod &apos;mPushSDK&apos;, &apos;1.6.5&apos;</string>
+                     
+                     <key>AppDelegate.m:implementation:push</key>
+                     <string>
+
+#pragma mark --
+#pragma mark -- PushManagerDelegate Method
+- (BOOL)onMessage:(NSString *)title content:(NSString *)content extention:(NSDictionary *)extention{
+
+    UIApplicationState appState = [extention[AppStateKey] integerValue];
+
+    NSLog(@"title : %@ \n content : %@ \n extention : %@ \n appState : %ld \n",title,content,[extention description],appState);
+
+    return YES;
+}
+
+
+
+#pragma mark --
+#pragma mark -- DeviceTokenDelegate Method
+- (void)didReciveDeviceToken:(NSString *)deviceToken{
+    NSLog(@"deviceToken --- String : %@",deviceToken);
+}</string>
+                     
+<key>AppDelegate.m:implementation:methods:applicationdidFinishLaunchingWithOptions:body:setup:push</key>
+            <string>
+/**
+*  开启推送服务并设置推送代理以及DeviceToken获取回调代理、自定义展示页面数据
+*  pushDelegate  推送代理
+*  deviceTokenDelegate  DeviceToken获取代理，如果无需获取SDK中得DeviceToken，此项可为nil
+*/
+[PushManager startPushServicePushDelegate:self tokenDelegate:self];
+
+
+/**
+*  设置是否为调试模式 默认为不开启  enabled:YES  打开   enabled:NO 关闭
+*/
+[PushManager setDebugMode:YES];
+
+/**
+*  为设备应用设置别名
+*/
+[PushManager setAlias:@"Alias-Testing"];
+[PushManager setTags:@[@"tag"]];
+
+/**
+*  按渠道检查版本,传入渠道名称即可
+*
+*/
+[PushManager checkNewUpdateWithChannel:@"AppStore" success:^(BOOL isNewest) {
+if (isNewest) {
+NSLog(@"已经是最新版本");
+}
+}];
+ </string>
+                  </dict>
+                  <key>Nodes</key>
+                  <array>
+                     <string>../Podfile:push</string>
+                     <string>AppDelegate.m:implementation:methods:applicationdidFinishLaunchingWithOptions:body:setup:push</string>
+                     <string>AppDelegate.m:implementation:push</string>
+                     <string>AppDelegate.m:imports:importHeader:PushManager.h</string> 
+                  </array> 
+               </dict>
+            </dict>
+         </dict>
+      </array>
+      <key>SortOrder</key>
+      <integer>1</integer>
+   </dict>
+</plist>
